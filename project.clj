@@ -10,7 +10,8 @@
   :hooks [leiningen.cljsbuild]
 
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-2268"]]
+                 [org.clojure/clojurescript "0.0-2268"]
+                 [enlive "1.1.5"]]
 
   :plugins [[lein-cljsbuild "1.0.3"]]
 

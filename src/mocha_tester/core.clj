@@ -1,4 +1,9 @@
-(ns mocha-tester.core)
+(ns mocha-tester.core
+  (:require [net.cgrand.enlive-html :as enlive]))
+
+
+
+;; Mocha helper macros
 
 (defmacro describe [text & body]
   (let [text (str text)]
@@ -24,3 +29,22 @@
 (defmacro after-each [& body]
   (let [[par & body] (if (vector? (first body)) body (cons [] body))]
     `(js/afterEach (fn ~par ~@body))))
+
+
+
+;; Ring helper stuff
+
+(defn- head-str [base]
+  (format
+   "<link rel='stylesheet' type='text/css' href='%1$s/mocha.css'>
+   <script src='%1$s/mocha.js'></script>
+   <script>mocha.setup('bdd')</script>" base))
+
+(def ^:private body-str
+  "<div id='mocha'></div>
+   <script>mocha.run()</script>")
+
+(defn apply-mocha [html base]
+  (enlive/sniptest html
+                   [:head] (enlive/append (head-str base))
+                   [:body] (enlive/append body-str)))
