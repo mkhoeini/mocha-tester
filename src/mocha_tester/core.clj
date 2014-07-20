@@ -1,5 +1,6 @@
 (ns mocha-tester.core
-  (:require [net.cgrand.enlive-html :as enlive]))
+  (:require [net.cgrand.enlive-html :as enlive]
+            [ring.util.response :refer (response resource-response)]))
 
 
 
@@ -49,3 +50,12 @@
   (enlive/sniptest html
                    [:head] (enlive/append (head-str base))
                    [:body] (enlive/append body-str)))
+
+(defn wrap [app]
+  (fn [req]
+    (let [resp (app req)]
+      (condp = (:uri req)
+        "/mocha-test" (response (apply-mocha (apply str (:body resp)) "/mocha-test"))
+        "/mocha-test/mocha.css" (resource-response "mocha.css")
+        "/mocha-test/mocha.js" (resource-response "mocha.js")
+        resp))))
