@@ -35,14 +35,15 @@
 ;; Ring helper stuff
 
 (defn- head-str [base]
-  (format
-   "<link rel='stylesheet' type='text/css' href='%1$s/mocha.css'>
-   <script src='%1$s/mocha.js'></script>
-   <script>mocha.setup('bdd')</script>" base))
+  (enlive/html
+   [:link {:rel "stylesheet" :type "text/css" :href (str base "/mocha.css")}]
+   [:script {:src (str base "/mocha.js")}]
+   [:script "mocha.setup('bdd');"]))
 
 (def ^:private body-str
-  "<div id='mocha'></div>
-   <script>mocha.run()</script>")
+  (enlive/html
+   [:div#mocha]
+   [:script "mocha.run();"]))
 
 (defn apply-mocha [html base]
   (enlive/sniptest html
